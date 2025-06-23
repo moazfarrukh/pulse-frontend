@@ -1,0 +1,48 @@
+@use "@/styles/colors" as *;
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: $text-secondary;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+
+  &:hover {
+    background-color: $gray-200;
+    color: $text-primary;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: $text-muted;
+
+    &:hover {
+      background-color: transparent;
+      transform: none;
+    }
+  }
+
+  &.active {
+    background-color: $light-blue-100;
+    color: $primary-color;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+} 

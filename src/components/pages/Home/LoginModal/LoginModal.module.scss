@@ -1,0 +1,171 @@
+// components/LoginModal/LoginModal.module.scss
+@use '@/styles/colors' as colors;
+@use '@/styles/fonts' as fonts;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: colors.$background-color;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  padding: 2rem;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #9CA3AF;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  z-index: 1;
+
+  &:hover {
+    background-color: #F3F4F6;
+    color: #374151;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: #E5E7EB;
+    box-shadow: 0 0 0 2px #3B82F6;
+  }
+}
+
+.content {
+  padding: 2rem;
+  padding-top: 3rem;
+}
+
+.title {
+  @include fonts.righteousFont;
+  font-weight: 400;
+  font-size: 45px;
+  line-height: 100%;
+  letter-spacing: 5%;
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-top: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.errorMessage {
+  background-color: #FEF2F2;
+  color: #DC2626;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #FECACA;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.forgotPassword {
+  background: none;
+  border: none;
+  color: #6B7280;
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-align: right;
+  padding: 0;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
+  display: inline; 
+
+  &:hover:not(:disabled) {
+    color: #374151;
+    text-decoration: underline;
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #E5E7EB;
+  }
+  
+  span {
+    padding: 0 1rem;
+    color: #9CA3AF;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}
+
+  
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Responsive design
+@media (max-width: 640px) {
+  .modal {
+    margin: 0.5rem;
+    max-width: none;
+    border-radius: 0.75rem;
+  }
+
+  .content {
+    padding: 1.5rem;
+    padding-top: 2.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .createAccountButton {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+}

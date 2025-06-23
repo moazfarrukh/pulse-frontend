@@ -1,0 +1,26 @@
+@use "@/styles/colors" as *;
+
+.textAreaWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.textArea {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1.4;
+  color: $text-secondary;
+  resize: none;
+  font-family: inherit;
+
+  &::placeholder {
+    color: $text-tertiary;
+  }
+
+  &:focus {
+    color: $text-primary;
+  }
+}

@@ -1,0 +1,18 @@
+.section,
+.activeSection {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #06334d;
+  font-weight: 500;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+.activeSection {
+  background-color: #c7e6fb;
+}
+.icon{
+    margin-right: 8px;
+}

@@ -1,0 +1,30 @@
+@use '@/styles/colors' as colors;
+@use '@/styles/fonts' as fonts;
+
+
+.sideNav {
+    @include fonts.interFont;
+    background: colors.$primary-color;
+    width: 60px;
+    height: calc(100vh - 48px);
+    padding: 0px 7px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.topItems {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.bottomItems {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}

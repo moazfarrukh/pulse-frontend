@@ -1,0 +1,131 @@
+// Updated ChatArea.module.scss
+@use "@/styles/colors" as *;
+@use "@/styles/fonts" as *;
+
+.chatArea {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: $blue-0;
+  height: 100%; // Ensure full height
+  overflow: hidden; // Prevent overflow from chatArea itself
+}
+
+.messagesContainer {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; // Important: allows flex item to shrink below content size
+  
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $blue-1;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $blue-3;
+    border-radius: 4px;
+    
+    &:hover {
+      background: $blue-4;
+    }
+  }
+}
+
+// When there's a channel selected, show scrollable content
+.messagesContainer:has(.scrollableContent) {
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 0;
+}
+
+// When showing empty state, center it
+.messagesContainer:not(:has(.scrollableContent)) {
+  justify-content: center;
+  align-items: center;  
+  padding: 20px;
+}
+
+.scrollableContent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.emptyState {
+  text-align: center;
+  color: $text-secondary;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 500px;
+  padding: 40px 20px;
+}
+
+.splashIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  
+  svg {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  }
+}
+
+.title {
+  @include sairaStencilOneFont;
+  color: $blue-5;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.subtitle {
+  @include robotoFont;
+  color: $blue-5;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.description {
+  @include robotoFont;
+  color: $blue-5;
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.noMessages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  text-align: center;
+  color: $text-secondary;
+  
+  p {
+    @include robotoFont;
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}

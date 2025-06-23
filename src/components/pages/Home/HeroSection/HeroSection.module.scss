@@ -1,0 +1,118 @@
+@use "@/styles/colors" as colors;
+@use "@/styles/fonts" as fonts;
+
+.hero {
+  height: 90vh;
+  position: relative;
+  overflow: hidden;
+  background-color: colors.$background-color;
+  width: 100%;
+}
+
+.container {
+    margin: 60 60px;
+}
+
+.content {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.textContent {
+  max-width: 700px;
+}
+
+.title {
+  @include fonts.righteousFont;
+  font-weight: 400;
+  font-size: 55px;
+  line-height: 100%;
+  letter-spacing: 5%;
+  color: colors.$primary-color;
+  margin-bottom: 24px;
+}
+
+.description {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 40px;
+    letter-spacing: 5%;
+    margin-bottom: 32px;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.visualContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroSvg {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdownIcon {
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    width: 100vw;
+    padding: 40px 0 40px 0;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .dropdownIcon {
+    bottom: 16px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 32px;
+  }
+  .visualContent {
+    order: 2;
+    margin-top: 24px;
+  }
+  .textContent {
+    order: 1;
+  }
+}

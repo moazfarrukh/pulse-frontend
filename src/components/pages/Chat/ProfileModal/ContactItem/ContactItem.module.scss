@@ -1,0 +1,42 @@
+@use "@/styles/colors" as *;
+@use "@/styles/fonts" as *;
+// Contact item styles
+.contactItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.contactInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contactDetails {
+  display: flex;
+  flex-direction: column;
+}
+.contactLabel {
+  @include robotoFont;
+  font-size: 12px;
+  font-weight: 500; 
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: $blue-6;
+  margin: 0 0 4px 0;
+}
+
+.contactValue {
+    @include robotoFont;
+    color: $blue-6;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 100%;
+    letter-spacing: 0%;
+}

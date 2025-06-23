@@ -1,0 +1,7 @@
+@use '@/styles/mixins' as mixins;
+
+.navLink {
+    @include mixins.navText;
+    padding: 8px 16px;
+    gap: 4px;
+}

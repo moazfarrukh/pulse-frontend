@@ -1,0 +1,6 @@
+// styles/Home.module.scss
+@use "@/styles/colors" as colors;
+
+.page {
+  background-color: colors.$blue-0;
+}

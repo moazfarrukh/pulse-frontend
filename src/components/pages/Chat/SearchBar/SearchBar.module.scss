@@ -1,0 +1,31 @@
+@use '@/styles/colors' as colors;
+@use '@/styles/fonts' as fonts;
+.searchBar {
+  background-color: #053850; 
+  padding: 0.5rem 0.5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+} 
+
+.input {
+  width: calc(100% - 32px); // Full width minus padding
+  max-width: calc(530px - 32px); // Max width minus padding
+  margin-left: calc(60px + 240px); // SideNav + WorkspaceBar + extra spacing
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}

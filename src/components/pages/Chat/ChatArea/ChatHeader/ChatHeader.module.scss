@@ -1,0 +1,80 @@
+// ChatHeader.module.scss
+@use "@/styles/colors" as *;
+@use "@/styles/fonts" as *;
+
+.chatHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: $blue-0;
+  border-bottom: 1px solid $blue-1;
+  min-height: 60px;
+}
+
+.channelInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.channelName {
+  @include robotoFont;
+  font-size: 18px;
+  font-weight: 600;
+  color: $blue-5;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hash {
+  color: $blue-8;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.memberInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatarGroup {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  margin-left: -12px;
+  position: relative;
+  
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+.memberCount {
+  @include robotoFont;
+  background-color: $blue-fade-1;
+  color: $blue-9;
+  padding: 6px;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 32px;
+  min-height: 32px;
+  margin-left:-12px;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

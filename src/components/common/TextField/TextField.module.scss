@@ -1,0 +1,101 @@
+// components/TextField/TextField.module.scss
+.fieldContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  
+  &:empty {
+    display: none;
+  }
+}
+
+.input {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  font-family: inherit;
+  
+  &:focus {
+    outline: none;
+    transform: translateY(-1px);
+  }
+  
+  &::placeholder {
+    color: #9CA3AF;
+    opacity: 1;
+  }
+  
+  &:disabled {
+    background-color: #F3F4F6;
+    color: #6B7280;
+    cursor: not-allowed;
+  }
+}
+
+.outlined {
+  background-color: transparent;
+  border: 2px solid #C8C8C8;
+  color: #111827;
+  
+  &:hover:not(:disabled) {
+    border-color: #D1D5DB;
+  }
+  
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.filled {
+  background-color: #F9FAFB;
+  border: 2px solid transparent;
+  color: #111827;
+  
+  &:hover:not(:disabled) {
+    background-color: #F3F4F6;
+  }
+  
+  &:focus {
+    background-color: #FFFFFF;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.error {
+  border-color: #EF4444 !important;
+  
+  &:focus {
+    border-color: #EF4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+  }
+}
+
+.helperText {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  color: #6B7280;
+}
+
+.errorText {
+  color: #EF4444;
+}
+
+@media (max-width: 640px) {
+  .input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}

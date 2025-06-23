@@ -1,0 +1,23 @@
+@use "@/styles/colors" as colors;
+
+/* styles/globals.scss */
+$font-stack: Arial, sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: $font-stack;
+  color: colors.$primary-color;
+  background-color: colors.$background-color;
+}
+
+a {
+  color: colors.$primary-color;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

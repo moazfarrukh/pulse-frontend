@@ -1,0 +1,22 @@
+@use "@/styles/colors" as *;
+
+.workspaceBar {
+  width: 250px;
+  height: calc(100vh - 48px);
+  background-color: $blue-fade-0;
+  border-right: 1px solid $blue-1;
+  font-family: sans-serif;
+  padding: 10px;
+}
+
+.header {
+  font-weight: bold;
+  padding: 10px 0;
+  font-size: 16px;
+  color: $primary-color;
+  border-bottom: 1px solid #005F93;
+}
+
+.icon {
+  margin-right: 8px;
+}

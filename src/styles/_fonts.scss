@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Righteous&family=Roboto:wght@100..900&family=Saira+Stencil+One&display=swap');
+
+@mixin righteousFont {
+    font-family: 'Righteous', cursive;
+}
+
+@mixin interFont {
+    font-family: 'Inter', sans-serif;
+}
+
+@mixin robotoFont {
+    font-family: 'Roboto', sans-serif;
+}
+
+@mixin sairaStencilOneFont {
+    font-family: 'Saira Stencil One', cursive;
+}

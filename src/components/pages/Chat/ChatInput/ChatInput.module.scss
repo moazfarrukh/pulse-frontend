@@ -1,0 +1,42 @@
+@use "@/styles/colors" as *;
+
+.chatInput {
+  background-color: $blue-fade-0;
+  border: 1px solid $blue-1;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid $chat-border;
+  padding-bottom: 12px;
+}
+
+.textArea {
+  min-height: 40px;
+  padding: 12px 0;
+  font-size: 14px;
+  color: $text-secondary;
+  line-height: 1.4;
+}
+
+.bottomBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+}
+
+.attachmentBar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}

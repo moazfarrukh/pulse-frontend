@@ -1,0 +1,130 @@
+@use '@/styles/colors' as colors;
+@use '@/styles/fonts' as fonts;
+
+.navigationItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: colors.$background-color;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    border-radius: 4px;
+    min-height: 44px;
+    width: 100%;
+    position: relative; 
+    ;
+
+    .iconContainer {
+        margin-bottom: 2px; // was 4px
+    }
+
+    &:focus {
+        outline: 2px solid rgba(255, 255, 255, 0.3);
+        outline-offset: 2px;
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+.label {
+  color: colors.$background-color;
+  font-size: 12px;
+}
+.iconContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 4px;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2;
+  }
+}
+
+.badge {
+  position: absolute;
+  top: -2px; // Fine-tuned for visual balance
+  right: -2px;
+  background-color: #ff4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 9999px; // Fully rounded for circles
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none; // Prevent hover/mouse events
+}
+
+// Active state 
+.active {
+  background-color: colors.$background-color;
+  color: colors.$primary-color;
+
+  .iconContainer svg {
+    stroke: inherit;
+    color: inherit;
+  }
+.label {
+        color: inherit;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 24px;
+    background-color: white;
+    border-radius: 0 2px 2px 0;
+  }
+}
+
+// Disabled state
+.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+
+  &:hover {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    transform: none;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .navigationItem {
+    padding: 8px 4px;
+    min-height: 56px;
+  }
+
+  .iconContainer {
+    width: 28px;
+    height: 28px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .label {
+    font-size: 10px;
+  }
+}
