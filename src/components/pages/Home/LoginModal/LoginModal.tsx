@@ -5,6 +5,7 @@ import styles from "./LoginModal.module.scss";
 import Button from "@/components/common/Button";
 import Link from "next/link";
 import { useLogin } from "@/hooks/mutation";
+import { XIcon } from "@/svgs/Icons";
 
 export interface LoginModalProps {
   isOpen: boolean;
@@ -81,7 +82,10 @@ const LoginModal: React.FC<LoginModalProps> = ({
       console.log("Login result:", result);
 
       if (result.ok) {
-        console.log("Login successful, token:", result.token);
+
+
+        window.location.href = "/chat";
+
         setFormData({ email: "", password: "" });
         handleClose();
       } else {
@@ -122,7 +126,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
           onClick={handleClose}
           aria-label="Close modal"
         >
-          ×
+          <XIcon />
         </button>
 
         <div className={styles.content}>

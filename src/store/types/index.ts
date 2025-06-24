@@ -4,8 +4,8 @@ import { User } from "@/types/User";
 export interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  setCurrentUser: (user: User) => Promise<void>;
+  removeCurrentUser: () => void;
 }
 
 export interface ChatState {

@@ -7,7 +7,6 @@ interface LoginInput {
 }
 
 interface LoginResponse {
-  token?: string;
   message?: string;
   ok: boolean;
 }
@@ -16,10 +15,9 @@ interface LoginResponse {
   useMutation<LoginResponse, Error, LoginInput>({
     mutationFn: async (data: LoginInput) => {
       const res = await AuthService.login(data.email, data.password);
-      
+
       return {
-        token: res.data.token,
-        message: res.data.message,
+        message: res.data.message || 'Login successful',
         ok: res.ok,
       };
     },

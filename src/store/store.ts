@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { Message } from "@/types/Message";
-import { User } from "@/types/User";
 import { AuthState, ChatState, ProfileModalState, ChatTabState } from "@/store/types";
+import { User } from "@/types";
 
 type StoreState = AuthState & ChatState & ProfileModalState & ChatTabState;
 
@@ -9,17 +9,10 @@ const useStore = create<StoreState>((set, get) => ({
   // AuthState
   isAuthenticated: false,
   user: null,
-  login: async (email: string, password: string) => {
-    console.log("Logging in with", email, password);
-    const user: User = {
-      id: "1",
-      email,
-      displayName: "Demo User",
-      username: "demo",
-    }; // mock user
-    set({ isAuthenticated: true, user });
+  setCurrentUser: async (user: User) => {
+    set({ isAuthenticated: true, user});
   },
-  logout: () => {
+  removeCurrentUser: () => {
     set({ isAuthenticated: false, user: null });
   },
 
@@ -38,13 +31,13 @@ const useStore = create<StoreState>((set, get) => ({
       timestamp: new Date().toISOString(),
       read: false,
       type: isGroup ? "group" : "dm",
-      avatar: user.avatarUrl || "", 
-      displayName: user.displayName,
+      avatar: user.avatar_url || "", 
+      displayName: user.display_name,
       message: content,
       mentions: [],
       ...(isGroup
         ? { groupId: currentChannel }
-        : { recipientId: currentChannel }),
+        : { chatId: currentChannel }),
     };
     set((state: StoreState) => ({
       messages: [...state.messages, newMessage],

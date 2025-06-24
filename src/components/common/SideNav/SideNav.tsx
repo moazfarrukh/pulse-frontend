@@ -8,7 +8,7 @@ import AddItem from "./AddItem";
 import useStore from "@/store";
 
 const SideNav: React.FC = () => {
-  const { openProfileModal } = useStore();
+  const { openProfileModal,user } = useStore();
 
   return (
     <div className={styles.sideNav}>
@@ -18,7 +18,7 @@ const SideNav: React.FC = () => {
       </div>
       <div className={styles.bottomItems}>
         <AddItem />
-        <Profile src="/images/profile.jpg" onClick={openProfileModal} />
+        <Profile src={user?.avatar_url || "/images/profile.jpg"} onClick={openProfileModal} />
       </div>
     </div>
   );

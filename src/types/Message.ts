@@ -5,11 +5,10 @@ export type Message = {
     mentions: string[] | undefined;
     id: string;
     senderId: string;
-    recipientId?: string;
+    chatId: string;
     content: string;
-
+    attachments?: string[]; // optional, for file attachments
     timestamp: string; // ISO 8601 format
     read: boolean;
     type: 'dm' | 'group';
-    groupId?: string; // present if type is 'group'
 };

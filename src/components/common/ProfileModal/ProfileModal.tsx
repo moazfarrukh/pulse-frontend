@@ -46,8 +46,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
 
   if (!isOpen) return null;
 
-  const avatarSrc = user.avatarUrl || "/images/profile.jpg";
-  const displayName = user.displayName || "User";
+  const avatarSrc = user.avatar_url || "/images/profile.jpg";
+  const displayName = user.display_name || "User";
 
   return (
     <>

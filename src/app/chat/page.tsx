@@ -1,7 +1,7 @@
 "use client";
-import SearchBar from "@/components/pages/Chat/SearchBar/SearchBar";
-import SideNav from "@/components/pages/Chat/SideNav/SideNav";
-import WorkspaceBar from "@/components/pages/Chat/WorkspaceBar/WorkspaceBar";
+import SearchBar from "@/components/common/SearchBar/SearchBar";
+import SideNav from "@/components/common/SideNav/SideNav";
+import WorkspaceBar from "@/components/common/WorkspaceBar/WorkspaceBar";
 import ChatArea from "@/components/pages/Chat/ChatArea";
 import ChatInput from "@/components/pages/Chat/ChatInput/ChatInput";
 import CreateChannel from "@/components/pages/Chat/CreateChannel";
@@ -9,25 +9,23 @@ import CreateChannel from "@/components/pages/Chat/CreateChannel";
 import React from "react";
 import styles from "./page.module.scss"; // Assuming you have a CSS module for styling
 import useStore  from "@/store";
-import ProfileModal from "@/components/pages/Chat/ProfileModal";
+import ProfileModal from "@/components/common/ProfileModal";
+import useCurrentUser from "@/hooks/query/useCurrentUser";
 
 const ChatPage: React.FC = () => {
-  const { currentChannel, isProfileModalOpen, closeProfileModal, chatTab } = useStore();
-  // Dummy user for demonstration
-  const user = {
-    id: "1",
-    name: "Muhammad Salman",
-    email: "m.salman@qlu.ai",
-    
-    displayName: "Muhammad Salman",
-    username: "msalman.qlu123",
-  };
+  const { currentChannel, isProfileModalOpen, closeProfileModal, chatTab ,setCurrentUser} = useStore();
+  const { data: user } = useCurrentUser();
+  React.useEffect(() => {
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, [user, setCurrentUser]);
 
   return (
     <div className={styles.chatPage}>
       <SearchBar />
       <div className={styles.chatContent}>
-        <ProfileModal isOpen={isProfileModalOpen} onClose={closeProfileModal} user={user} />
+        {user && <ProfileModal isOpen={isProfileModalOpen} onClose={closeProfileModal} user={user} />}
         <SideNav />
         <WorkspaceBar />
         <div className={styles.mainContent}>
@@ -50,3 +48,4 @@ const ChatPage: React.FC = () => {
 };
 
 export default ChatPage;
+

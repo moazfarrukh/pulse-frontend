@@ -9,7 +9,6 @@ interface SignupInput {
 }
 
 interface SignupResponse {
-  token?: string;
   message?: string;
   ok: boolean;
 }
@@ -20,7 +19,6 @@ const useSignup = () =>
       const res = await AuthService.signup(data.email, data.password, data.username, data.display_name);
 
       return {
-        token: res.data.token,
         message: res.data.message,
         ok: res.ok,
       };

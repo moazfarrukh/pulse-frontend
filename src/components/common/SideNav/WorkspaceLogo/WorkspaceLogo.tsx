@@ -5,7 +5,7 @@ import PulseLogo from "@/svgs/Images/PulseLogo";
 const WorkspaceLogo: React.FC = () => {
     return (
         <div className={styles.workspaceLogo}>
-            <PulseLogo className={styles.image} />
+            <PulseLogo className={styles.image} width={90} />
         </div>
     );
 };

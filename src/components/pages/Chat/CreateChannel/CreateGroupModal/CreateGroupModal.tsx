@@ -12,11 +12,11 @@ interface CreateGroupModalProps {
 
 // Mock users for dropdown
 const mockUsers: User[] = [
-  { id: "1", username: "alice", displayName: "Alice", email: "alice@email.com" },
-  { id: "2", username: "bob", displayName: "Bob", email: "bob@email.com" },
-  { id: "3", username: "charlie", displayName: "Charlie", email: "charlie@email.com" },
-  { id: "4", username: "david", displayName: "David", email: "david@email.com" },
-  { id: "5", username: "eve", displayName: "Eve", email: "eve@email.com" },
+  { id: "1", username: "alice", display_name: "Alice", email: "alice@email.com" },
+  { id: "2", username: "bob", display_name: "Bob", email: "bob@email.com" },
+  { id: "3", username: "charlie", display_name: "Charlie", email: "charlie@email.com" },
+  { id: "4", username: "david", display_name: "David", email: "david@email.com" },
+  { id: "5", username: "eve", display_name: "Eve", email: "eve@email.com" },
 ];
 
 const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
@@ -144,7 +144,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
                 {type === "dm" && <option value="" disabled>Select a user</option>}
                 {mockUsers.map((user) => (
                   <option key={user.id} value={user.id}>
-                    {user.displayName} ({user.email})
+                    {user.display_name} ({user.email})
                   </option>
                 ))}
               </select>

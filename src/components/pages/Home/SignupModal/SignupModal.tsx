@@ -4,6 +4,7 @@ import TextField from "@/components/common/TextField";
 import styles from "./SignupModal.module.scss";
 import Button from "@/components/common/Button";
 import { useSignup } from "@/hooks/mutation";
+import { XIcon } from "@/svgs/Icons";
 
 export interface SignupModalProps {
   isOpen: boolean;
@@ -25,7 +26,6 @@ const SignupModal: React.FC<SignupModalProps> = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
   const mutationSignUp = useSignup();
- 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,10 +42,10 @@ const SignupModal: React.FC<SignupModalProps> = ({
       }));
     }
   };
- const handleClose = () => {
+  const handleClose = () => {
     onClose();
-      setErrors({});
-      setFormData({ email: "", password: "", displayName: "", username: "" });
+    setErrors({});
+    setFormData({ email: "", password: "", displayName: "", username: "" });
   };
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -83,9 +83,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
         password: formData.password,
       });
       console.log("Signup result:", result);
-
       if (result.ok) {
-        console.log("Signup successful, token:", result.token);
         handleClose();
       } else {
         setErrors({
@@ -119,7 +117,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
           onClick={handleClose}
           aria-label="Close modal"
         >
-          ×
+          <XIcon />
         </button>
 
         <div className={styles.content}>
