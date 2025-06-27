@@ -4,26 +4,25 @@ import styles from "./Button.module.scss";
 
 interface ButtonProps {
     text: string;
-    action: () => void | Promise<void>;
-    variant?: "primary" | "outline";
+    onClick: () => void | Promise<void>;
+    variant?: string;
     padding?: string;
     style?: CSSProperties;
 }
 
 const Button: React.FC<ButtonProps> = ({ 
     text, 
-    action, 
+    onClick, 
     variant = "primary",
     padding,
-    style 
 }) => {
-    const buttonClass = variant === "primary" ? styles.primary : styles.outline;
+    const buttonClass = styles[variant]
 
     return (
         <button
             className={`${styles.button} ${buttonClass}`}
-            onClick={action}
-            style={{ ...(padding ? { padding } : {}), ...style }} // Merge styles
+            onClick={onClick}
+            style={padding ? { padding } : {}}
         >
             {text}
         </button>

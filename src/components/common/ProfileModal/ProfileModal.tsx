@@ -1,12 +1,16 @@
 // ProfileModal.tsx
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { User } from "@/types";
-import { XIcon} from "@/svgs/Icons";
+import { XIcon } from "@/svgs/Icons";
 import styles from "./ProfileModal.module.scss";
 import ContactItemList from "./ContactItemList";
+import EditProfileModal from "../EditProfileModal";
+import Button from "../Button";
+import { useLogout } from "@/hooks/mutation";
+import EditModal from "../EditModal";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -19,30 +23,62 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   isOpen,
   onClose,
   user,
+  onSave,
 }) => {
-  const [, setIsEditing] = useState(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const logoutMutation = useLogout();
 
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.target === e.currentTarget) {
-        onClose();
-      }
-    },
-    [onClose]
-  );
+ const contactFields = [
+      {
+        id: "email",
+        label: "Email",
+        value: user.email || "",
+        type: "email",
+      },
+      {
+        id: "phone",
+        label: "Phone Number",
+        value: user.phone || "",
+        type: "tel",
+      },
+    ];
 
-  const handleEditToggle = useCallback(() => {
-    setIsEditing((prev) => !prev);
-  }, []);
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    },
-    [onClose]
-  );
+  const handleEditProfileToggle = () => {
+    setIsEditProfileModalOpen(true);
+  };
+
+  const handleEditProfileModalClose = () => {
+    setIsEditProfileModalOpen(false);
+  };
+
+  const handleEditProfileModalSave = (userData: Partial<User>) => {
+    if (onSave) {
+      onSave(userData);
+    }
+    setIsEditProfileModalOpen(false);
+  };
+
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
+  };
+
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      onClose();
+    }
+  };
+
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync();
+  };
 
   if (!isOpen) return null;
 
@@ -104,7 +140,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
                 <span className={styles.userHandle}>@{user.username}</span>
               </div>
               <button
-                onClick={handleEditToggle}
+                onClick={handleEditProfileToggle}
                 className={styles.editButton}
                 aria-label="Edit username"
               >
@@ -113,20 +149,34 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
             </div>
 
             <div className={styles.statusText}>
-              Status will be shown here when ever a user set a status. Status
-              will be shown here when ever a user set a status. Status will be
-              shown here when ever a user set a status. Status will be shown
-              here when ever a user set a status.
+              {user.bio || "No status available."}
             </div>
           </section>
-          {/* Contact Items Section */}
+
           <ContactItemList
             user={user}
-            onEdit={handleEditToggle}
-            onAddInformation={handleEditToggle}
+            onEdit={() => setIsEditModalOpen(true)}
+            onAddInformation={() => setIsEditModalOpen(true)}
           />
+
+          <div className={styles.buttonSection}>
+            <Button text="Logout" variant="danger" onClick={handleLogout} />
+          </div>
         </main>
       </div>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={isEditProfileModalOpen}
+        onClose={handleEditProfileModalClose}
+        user={user}
+        onSave={handleEditProfileModalSave}
+      />
+      <EditModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        contactFields={contactFields}
+      />
     </>
   );
 };

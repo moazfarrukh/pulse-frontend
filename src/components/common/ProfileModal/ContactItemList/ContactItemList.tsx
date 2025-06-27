@@ -16,6 +16,7 @@ const ContactItemList: React.FC<ContactItemListProps> = ({
     onAddInformation,
 }) => {
     // Define contact items to display
+    
     const contactItems = [
         { label: "Email Address", value: user.email },
         { label: "Phone Number", value: user.phone || "03248080521" },

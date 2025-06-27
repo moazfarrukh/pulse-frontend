@@ -6,20 +6,18 @@ interface ContactField {
   id: string;
   label: string;
   value: string;
-  type: 'email' | 'tel' | 'text';z
+  type: string;
 }
 
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (updatedFields: ContactField[]) => void;
   contactFields: ContactField[];
 }
 
 const EditModal: React.FC<EditModalProps> = ({
   isOpen,
   onClose,
-  onSave,
   contactFields,
 }) => {
   const [fields, setFields] = useState<ContactField[]>(contactFields);
@@ -55,9 +53,8 @@ const EditModal: React.FC<EditModalProps> = ({
   }, []);
 
   const handleSave = useCallback(() => {
-    onSave(fields);
     onClose();
-  }, [fields, onSave, onClose]);
+  }, [onClose]);
 
   const handleCancel = useCallback(() => {
     setFields(contactFields); // Reset to original values

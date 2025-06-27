@@ -1,5 +1,5 @@
 import {AuthService} from "@/services";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface SignupInput {
   email: string;
@@ -13,8 +13,10 @@ interface SignupResponse {
   ok: boolean;
 }
 
-const useSignup = () =>
-  useMutation<SignupResponse, Error, SignupInput>({
+const useSignup = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation<SignupResponse, Error, SignupInput>({
     mutationFn: async (data: SignupInput) => {
       const res = await AuthService.signup(data.email, data.password, data.username, data.display_name);
 
@@ -23,5 +25,9 @@ const useSignup = () =>
         ok: res.ok,
       };
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
   });
+};
 export default useSignup;

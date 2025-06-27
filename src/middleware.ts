@@ -14,11 +14,18 @@ export function middleware(request: NextRequest) {
         }
     }
 
+    // Redirect authenticated users from root to chat
+    if (request.nextUrl.pathname === '/') {
+        const token = request.cookies.get('token')?.value;
+        if (token) {
+            return NextResponse.redirect(new URL('/chat', request.url));
+        }
+    }
+
     // Continue with the request if token exists or if it's not the chat route
     return NextResponse.next();
-}
-
 // Configure which routes the middleware should run on
+}
 export const config = {
-    matcher: ['/chat/:path*'],
+    matcher: ['/', '/chat/:path*'],
 };

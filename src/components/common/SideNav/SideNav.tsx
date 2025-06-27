@@ -5,11 +5,11 @@ import MainNavigation from "./MainNavigation";
 import WorkspaceLogo from "./WorkspaceLogo";
 import Profile from "./Profile";
 import AddItem from "./AddItem";
-import useStore from "@/store";
+import { useUIStore, useUserStore } from "@/store";
 
 const SideNav: React.FC = () => {
-  const { openProfileModal,user } = useStore();
-
+  const { currentUser: user } = useUserStore();
+  const { openProfileModal } = useUIStore();
   return (
     <div className={styles.sideNav}>
       <div className={styles.topItems}>

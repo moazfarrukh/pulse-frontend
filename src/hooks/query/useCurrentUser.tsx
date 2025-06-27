@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { AuthService } from "@/services";
+import { useUserStore } from "@/store";
 
 interface User {
-    id: string;
+    id: number;
     email: string;
     username: string;
     display_name: string;
@@ -11,8 +12,9 @@ interface User {
     phone: string;
     created_at: string;
 }
-
 const useCurrentUser = () => {
+    const { setCurrentUser } = useUserStore();
+    
     return useQuery<User, Error>({
         queryKey: ["me"],
         queryFn: async () => {
@@ -22,8 +24,10 @@ const useCurrentUser = () => {
                 throw new Error(res.data?.message || "Failed to fetch user data");
             }
             
-            return res.data;
-        },
+            const data = res.data;
+            setCurrentUser(data);
+            return data;
+        }
     });
 };
 

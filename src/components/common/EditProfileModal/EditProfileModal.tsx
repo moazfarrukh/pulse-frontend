@@ -2,14 +2,9 @@ import React, { useState, useCallback, useRef } from "react";
 import styles from "./EditProfileModal.module.scss";
 import Image from "next/image";
 import { XIcon } from "@/svgs/Icons";
+import { useEditUser } from "@/hooks/mutation"; 
 
-interface User {
-  displayName?: string;
-  username: string;
-  email: string;
-  avatarUrl?: string;
-  status?: string;
-}
+import { User } from "@/types"; 
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -24,14 +19,20 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
   user,
   onSave,
 }) => {
+  const { mutate: editUser, isPending: isEditing } = useEditUser(); // Add this line
+
   const [formData, setFormData] = useState({
     email: user.email || "",
-    username: user.username || "",
-    status: user.status || "Status will be shown here when ever a user set a status. Status will be shown here when ever a user set a status. Status will be shown here when ever a user set a status. Status will be shown here when ever a user set a status.",
-    avatarUrl: user.avatarUrl || "/images/profile.jpg",
+    display_name: user.display_name || "",
+    status: user.bio || "",
+    avatarUrl: user.avatar_url || "/images/profile.jpg",
+    avatarFile: null as File | null // Store the actual File object
   });
 
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Remove the uploadAvatar function since we're using the hook now
 
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent) => {
@@ -58,43 +59,108 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
     }));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        setFormData(prev => ({
-          ...prev,
-          avatarUrl: result
-        }));
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    setUploadError(null);
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please select an image file');
+      return;
     }
+
+    // Validate file size
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError('File size must be less than 5MB');
+      return;
+    }
+
+    // Create preview URL for immediate display
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result as string;
+      setFormData(prev => ({
+        ...prev,
+        avatarUrl: result, // Temporary preview
+        avatarFile: file // Store the actual File object
+      }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleRemovePhoto = () => {
     setFormData(prev => ({
       ...prev,
-      avatarUrl: "/images/profile.jpg"
+      avatarUrl: "/images/profile.jpg",
+      avatarFile: null
     }));
+    setUploadError(null);
+    
+    // Clear the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
-  const handleSave = () => {
-    if (onSave) {
-      onSave(formData);
-    }
-    onClose();
+  const handleSave = async () => {
+    const dataToSave = {
+      email: formData.email,
+      username: user.username,
+      display_name: formData.display_name,  
+      bio: formData.status,
+      avatarFile: formData.avatarFile,
+    };
+
+    editUser(dataToSave, {
+      onSuccess: (response) => {
+        if(!response.ok) {
+          setUploadError(response.message || 'Failed to update profile');
+          return;
+        }
+        
+        // Update the avatar URL if a new one was returned
+        if (response.avatar_url) {
+          setFormData(prev => ({
+            ...prev,
+            avatarUrl: response.avatar_url || prev.avatarUrl, // Use previous value as fallback
+            avatarFile: null // Clear the file after successful upload
+          }));
+        }
+
+        if (onSave) {
+          onSave({
+            ...dataToSave,
+            avatar_url: response.avatar_url || formData.avatarUrl,
+          });
+        }
+        
+        onClose();
+      },
+      onError: (error) => {
+        console.error('Failed to update profile:', error);
+        setUploadError(error.message || 'Failed to update profile');
+      },
+    });
   };
 
   const handleCancel = () => {
-    // Reset form data to original values
+    // Reset form data
     setFormData({
       email: user.email || "",
-      username: user.username || "",
-      status: user.status || "Status will be shown here when ever a user set a status. Status will be shown here when ever a user set a status. Status will be shown here when ever a user set a status. Status will be shown here when ever a user set a status.",
-      avatarUrl: user.avatarUrl || "/images/profile.jpg",
+      display_name: user.display_name || "",
+      status: user.bio || "",
+      avatarUrl: user.avatar_url || "/images/profile.jpg",
+      avatarFile: null
     });
+    setUploadError(null);
+    
+    // Clear the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+
     onClose();
   };
 
@@ -151,18 +217,18 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 />
               </div>
 
-              {/* Username */}
+              {/* Display Name */}
               <div className={styles.inputGroup}>
-                <label htmlFor="username" className={styles.label}>
-                  Username
+                <label htmlFor="display_name" className={styles.label}>
+                  Display name
                 </label>
                 <input
-                  id="username"
+                  id="display_name"
                   type="text"
-                  value={formData.username}
-                  onChange={(e) => handleInputChange('username', e.target.value)}
+                  value={formData.display_name}
+                  onChange={(e) => handleInputChange('display_name', e.target.value)}
                   className={styles.input}
-                  placeholder="@username"
+                  placeholder="@display_name"
                 />
               </div>
 
@@ -195,21 +261,29 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     <Image
                       src={formData.avatarUrl}
                       alt="Profile avatar"
-                      className={styles.avatar}
+                      className={`${styles.avatar} `}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = "/images/profile.jpg";
                       }}
-                        width={300}
-                        height={300}
+                      width={300}
+                      height={300}
                     />
+              
                   </div>
+
+                  {/* Error Message */}
+                  {uploadError && (
+                    <div className={styles.errorMessage}>
+                      {uploadError}
+                    </div>
+                  )}
 
                   {/* Upload Button */}
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     className={styles.uploadButton}
                   >
-                    Upload Profile Photo
+                    {'Upload Profile Photo'}
                   </button>
 
                   {/* Remove Photo Button */}
@@ -239,18 +313,21 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({
           <button
             onClick={handleCancel}
             className={styles.cancelButton}
+            disabled={isEditing}
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             className={styles.saveButton}
+            disabled={isEditing}
           >
-            Save changes
+            {isEditing ? 'Saving...' : 'Save changes'}
           </button>
         </footer>
       </div>
     </>
   );
 };
+
 export default EditProfileModal;

@@ -4,17 +4,24 @@
 import React from "react";
 import styles from "./ChatHeader.module.scss";
 
+
 interface ChatHeaderProps {
   channelName: string;
   memberCount?: number;
   memberAvatars?: string[];
+  isMember?: boolean;
+  onJoinChat?: () => void;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ 
   channelName, 
   memberCount = 0, 
-  memberAvatars = [] 
+  memberAvatars = [],
+  isMember = true,
+  onJoinChat
 }) => {
+
+
   return (
     <div className={styles.chatHeader}>
       <div className={styles.channelInfo}>
@@ -23,7 +30,11 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           {channelName}
         </div>
       </div>
-      
+      {!isMember && (
+        <button className={styles.joinChatButton} onClick={onJoinChat}>
+          Join Chat
+        </button>
+      )}
       {memberCount > 0 && (
         <div className={styles.memberInfo}>
           <div className={styles.avatarGroup}>

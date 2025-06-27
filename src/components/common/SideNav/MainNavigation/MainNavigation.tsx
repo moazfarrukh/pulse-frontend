@@ -5,10 +5,10 @@ import {NotificationIcon} from "@/svgs/Icons";
 import MessageIcon from "@/svgs/Icons/MessageIcon";
 import MoreIcon from "@/svgs/Icons/MoreIcon";   
 import styles from "./MainNavigation.module.scss";
-import useStore from "@/store";
+import { useUIStore } from "@/store";
 const MainNavigation: React.FC = () => {
 
-    const { setChatTab,chatTab ,setCurrentChannel} = useStore();
+    const { setChatTab,chatTab } = useUIStore();
     const [activeIndex, setActiveIndex] = useState(0);
     const navigationItems = [
         {
@@ -17,7 +17,6 @@ const MainNavigation: React.FC = () => {
                 if (chatTab !== "chat") {
                     setChatTab("chat");
                 }
-                setCurrentChannel("");
             },
         },
         {
@@ -30,7 +29,6 @@ const MainNavigation: React.FC = () => {
                 if (chatTab !== "chat") {
                     setChatTab("chat");
                 }
-                setCurrentChannel("");
             },
         },
         {

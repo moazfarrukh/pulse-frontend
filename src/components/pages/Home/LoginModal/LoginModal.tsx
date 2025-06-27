@@ -171,7 +171,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
             <Button
               text={isLoading ? "Logging in..." : "Login"}
-              action={() =>
+              onClick={() =>
                 handleSubmit(
                   new Event(
                     "submit"
@@ -187,7 +187,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
             <Button
               text="Create a new account"
-              action={onCreateAccount ?? (() => {})}
+              onClick={onCreateAccount ?? (() => {})}
               padding="10px 60px"
               variant="outline"
             />

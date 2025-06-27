@@ -1,5 +1,5 @@
 import {AuthService} from "@/services";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface LoginInput {
   email: string;
@@ -11,8 +11,9 @@ interface LoginResponse {
   ok: boolean;
 }
 
- const useLogin = () =>
-  useMutation<LoginResponse, Error, LoginInput>({
+const useLogin = () => {
+  const queryClient = useQueryClient();
+  return useMutation<LoginResponse, Error, LoginInput>({
     mutationFn: async (data: LoginInput) => {
       const res = await AuthService.login(data.email, data.password);
 
@@ -21,5 +22,11 @@ interface LoginResponse {
         ok: res.ok,
       };
     },
+    onSuccess: () => {
+      // Invalidate the "me" query key to refetch user data after login
+      queryClient.invalidateQueries({ queryKey: ["me"] });
+
+    },
   });
+};
   export default useLogin;

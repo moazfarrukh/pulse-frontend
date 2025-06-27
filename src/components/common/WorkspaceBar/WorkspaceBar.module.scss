@@ -20,3 +20,94 @@
 .icon {
   margin-right: 8px;
 }
+
+.expandable {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  color: #06334d;
+  font-size: 14px;
+  margin-top: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+  }
+}
+
+.chevron {
+  margin-right: 8px;
+  transition: transform 0.2s ease;
+}
+
+.chevronDown {
+  margin-right: 8px;
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+
+.expandableContent {
+  padding-left: 20px;
+  margin-top: 4px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.expandable {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  color: #06334d;
+  font-size: 14px;
+  margin-top: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+  }
+}
+
+.chevron {
+  margin-right: 8px;
+  transition: transform 0.2s ease;
+}
+
+.chevronDown {
+  margin-right: 8px;
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+
+.expandableContent {
+  padding-left: 20px;
+  margin-top: 4px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.noChats {
+  color: #6b7280;
+  font-size: 14px;
+  padding: 12px 0;
+  text-align: center;
+}

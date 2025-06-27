@@ -1,0 +1,65 @@
+@use "@/styles/colors" as *;
+@use "@/styles/fonts" as *;
+.createChannel {
+  padding: 1.5rem;
+  background: #f7fafc;
+  min-height: 100vh;
+}
+
+.createButton {
+  margin-bottom: 1.5rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid #b5d3f3;
+  background: #f7fafc;
+  border-radius: 4px;
+  color: #1a365d;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: #e6f0fa;
+  }
+}
+
+.groupGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.groupCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; // or center for centered button
+  justify-content: space-between;
+  padding: 1rem;
+  background: #f4faff;
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  min-width: 180px;
+  min-height: 80px;
+  gap: 12px; // space between name and button
+}
+
+.groupCard b {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.joinButton {
+  align-self: flex-start; // or center for centered button
+  margin-top: 0.5rem;
+  padding: 5px 16px;
+  background: $blue-5;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  &:hover {
+    background: $blue-7;
+  }
+}

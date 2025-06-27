@@ -34,6 +34,14 @@
   font-size: 20px;
 }
 
+.chatAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: white;
+}
+
 .memberInfo {
   display: flex;
   align-items: center;
@@ -51,6 +59,7 @@
   border-radius: 50%;
   background-size: cover;
   background-position: center;
+  background-color: gray    ;
   margin-left: -12px;
   position: relative;
   
@@ -77,4 +86,21 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.joinChatButton {
+  margin-left: 16px;
+  padding: 6px 18px;
+  background: $blue-5;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  &:hover {
+    background: $blue-7;
+  }
 }

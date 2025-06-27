@@ -129,3 +129,120 @@
   font-size: 48px;
   margin-bottom: 8px;
 }
+
+.chatDescription {
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 16px 24px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.creatorInfo {
+  @include robotoFont;
+  font-size: 14px;
+  line-height: 1.5;
+  color: $blue-5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.mention {
+  color: $blue-7;
+  font-weight: 600;
+  cursor: pointer;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.text {
+  color: $blue-5;
+}
+
+.date {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.description {
+  @include robotoFont;
+  font-size: 14px;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+
+.groupName {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 24px;
+    font-weight: 600;
+    color: $blue-7;
+    margin-bottom: 12px;
+    background: $blue-fade-0;
+    padding: 4px 12px;
+    border-radius: 6px;
+
+    .hash {
+        font-weight: 500;
+    }
+    
+    .userAvatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+        background-color: white;
+    }
+}
+// Enhanced typing indicator styles
+.typingIndicator {
+  position: sticky;
+  bottom: 5px;
+  margin-left: 24px; // Using margin instead of left for proper positioning
+  color: $blue-6;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; // Align content to the left
+  z-index: 10;
+  max-width: calc(100% - 72px); // Account for margins
+  
+  // Prevent text from wrapping and ensure it's readable
+  .typingText {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+    min-width: 0; 
+  }
+}
+
+// Additional styles for better positioning within the messages container
+.messagesContainer {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  .scrollableContent {
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 10px; // Extra space for typing indicator
+  }
+}
+
+.messagesList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 16px 24px; 
+  gap: 16px; 
+  flex-shrink: 0; 
+  min-height: min-content; 
+}

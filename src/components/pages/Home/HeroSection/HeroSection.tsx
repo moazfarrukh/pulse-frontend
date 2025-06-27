@@ -44,13 +44,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onLoginClick,onSignUpClick })
             <div className={styles.buttonGroup}>
               <Button
                 text="Get Started"
-                action={onSignUpClick}
+                onClick={onSignUpClick}
                 padding="10px 60px"
                 variant="primary"
               />
               <Button
                 text="Login"
-                action={onLoginClick}
+                onClick={onLoginClick}
                 padding="10px 70px"
                 variant="outline"
               />

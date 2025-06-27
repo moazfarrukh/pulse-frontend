@@ -98,6 +98,35 @@ const AuthService = {
         ok: false,
       };
     }
+  },
+  async logout() {
+    try {
+      const response = await axiosClient.get(`/auth/logout`, {
+        withCredentials: true
+      });
+      return {
+        data: response.data,
+        ok: true,
+      };
+    } catch (error: unknown) {
+      if (isAxiosError(error)) {
+        const message = error.response?.data?.message || "Logout failed";
+        return {
+          data: {
+            message,
+            ok: false,
+          },
+          ok: false,
+        };
+      }
+      return {
+        data: {
+          message: "Something went wrong",
+          ok: false,
+        },
+        ok: false,
+      };
+    }
   }
 };
 

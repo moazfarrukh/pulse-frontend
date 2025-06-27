@@ -29,7 +29,7 @@ const TopNavBar: React.FC = () => {
       />
       <Button
         text="Try Pulse"
-        action={() => {          }}
+        onClick={() => {          }}
         variant="primary"
       />  
     </div>
