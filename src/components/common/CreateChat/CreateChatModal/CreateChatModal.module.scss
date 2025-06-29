@@ -27,8 +27,8 @@
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.95);
   transition: all 0.3s ease-in-out;
-  margin-right: 0; 
-  padding-right: 0; 
+  margin-right: 0;
+  padding-right: 0;
 
   &.open {
     opacity: 1;
@@ -302,7 +302,19 @@
     transform: translateY(1px);
   }
 }
+.inputError {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
 
+// Error text styling
+.errorText {
+  @include robotoFont;
+  font-size: 12px;
+  color: #dc2626;
+  margin-top: 4px;
+  font-weight: 400;
+}
 .saveButton {
   @include robotoFont;
   padding: 8px 24px;

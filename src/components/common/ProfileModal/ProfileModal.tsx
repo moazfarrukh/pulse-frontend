@@ -4,14 +4,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { User } from "@/types";
-import { XIcon } from "@/svgs/Icons";
+import { XIcon } from "@/svgs/icons";
 import styles from "./ProfileModal.module.scss";
 import ContactItemList from "./ContactItemList";
 import EditProfileModal from "../EditProfileModal";
 import Button from "../Button";
 import { useLogout } from "@/hooks/mutation";
-import EditModal from "../EditModal";
-
 interface ProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,23 +24,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   onSave,
 }) => {
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const logoutMutation = useLogout();
 
- const contactFields = [
-      {
-        id: "email",
-        label: "Email",
-        value: user.email || "",
-        type: "email",
-      },
-      {
-        id: "phone",
-        label: "Phone Number",
-        value: user.phone || "",
-        type: "tel",
-      },
-    ];
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -65,9 +48,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
     setIsEditProfileModalOpen(false);
   };
 
-  const handleEditModalClose = () => {
-    setIsEditModalOpen(false);
-  };
+
 
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -155,8 +136,6 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
 
           <ContactItemList
             user={user}
-            onEdit={() => setIsEditModalOpen(true)}
-            onAddInformation={() => setIsEditModalOpen(true)}
           />
 
           <div className={styles.buttonSection}>
@@ -172,11 +151,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         user={user}
         onSave={handleEditProfileModalSave}
       />
-      <EditModal
-        isOpen={isEditModalOpen}
-        onClose={handleEditModalClose}
-        contactFields={contactFields}
-      />
+
     </>
   );
 };

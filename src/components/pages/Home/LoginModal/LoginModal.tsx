@@ -5,7 +5,7 @@ import styles from "./LoginModal.module.scss";
 import Button from "@/components/common/Button";
 import Link from "next/link";
 import { useLogin } from "@/hooks/mutation";
-import { XIcon } from "@/svgs/Icons";
+import { XIcon } from "@/svgs/icons";
 
 export interface LoginModalProps {
   isOpen: boolean;

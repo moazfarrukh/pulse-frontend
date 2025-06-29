@@ -19,8 +19,6 @@ interface ChatAreaProps {
   socket: ReturnType<typeof useSocket>;
 }
 
-
-
 const ChatArea: React.FC<ChatAreaProps> = ({ socket }) => {
   const { currentChannel, currentChat } = useChatStore();
   const { currentUser: user } = useUserStore();
@@ -44,7 +42,10 @@ const ChatArea: React.FC<ChatAreaProps> = ({ socket }) => {
   }, []);
 
   const removeTypingUser = useCallback((userId: number) => {
-    setTypingUsers((prev) => prev.filter((u) => u.user_id !== userId));
+    setTypingUsers((prev) => {
+      const filtered = prev.filter((u) => u.user_id !== userId);
+      return filtered;
+    });
     if (typingTimeoutRef.current[userId]) {
       clearTimeout(typingTimeoutRef.current[userId]);
       delete typingTimeoutRef.current[userId];
@@ -60,12 +61,16 @@ const ChatArea: React.FC<ChatAreaProps> = ({ socket }) => {
         }
         return prev;
       });
+      
+      // Clear existing timeout and set a new one
       if (typingTimeoutRef.current[userId]) {
         clearTimeout(typingTimeoutRef.current[userId]);
       }
+      
+      // Increased timeout to 5 seconds for smoother experience
       typingTimeoutRef.current[userId] = setTimeout(() => {
         removeTypingUser(userId);
-      }, 3000);
+      }, 5000);
     },
     [removeTypingUser]
   );
@@ -93,6 +98,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ socket }) => {
 
   useEffect(() => {
     if (!socket || !currentChannel) return;
+    
     const handleNewMessage = (data: SocketMessage) => {
       if (String(data.chat_id) === String(currentChannel)) {  
         queryClient.setQueryData(
@@ -102,6 +108,10 @@ const ChatArea: React.FC<ChatAreaProps> = ({ socket }) => {
             return [...oldData, data];
           }
         );
+        
+        if (data.sender_id) {
+          removeTypingUser(data.sender_id);
+        }
       }
     };
 
@@ -123,6 +133,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ socket }) => {
         removeTypingUser(data.user_id);
       }
     };
+
     socket.onAny((event, ...args) => {
       console.log(`Socket event received: ${event}`, args);
     });
@@ -137,6 +148,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ socket }) => {
     socket.on(SocketEvents.ON_MESSAGE, handleNewMessage);
     socket.on(SocketEvents.ON_TYPING_START, handleTypingStart);
     socket.on(SocketEvents.ON_TYPING_STOP, handleTypingStop);
+    
     return () => {
       console.log("Cleaning up socket listeners in ChatArea");
       socket.off(SocketEvents.ON_MESSAGE, handleNewMessage);
@@ -170,9 +182,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ socket }) => {
 
   const handleJoinChat = () => {
     if (!socket || !currentChannel || isMember) return;
-    // Emit a join event or call an API as needed
     socket.emit(SocketEvents.ON_JOIN_CHAT, currentChannel);
-    // Optionally, you may want to refetch members or update state here
   };
 
   return (
@@ -257,14 +267,9 @@ const ChatArea: React.FC<ChatAreaProps> = ({ socket }) => {
       </div>
       {typingUsers.length > 0 && (
         <div className={styles.typingIndicator}>
-          <div className={styles.typingText}>{getTypingText(typingUsers)}</div>
-          <div className={styles.typingDots}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+          <div className={styles.typingText}>{`${getTypingText(typingUsers)}`}</div>
         </div>
-      )}
+      )}  
     </div>
   );
 };

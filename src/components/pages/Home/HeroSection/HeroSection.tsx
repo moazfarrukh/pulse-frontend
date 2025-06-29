@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./HeroSection.module.scss";
 
 import Button from "@/components/common/Button";
-import DropdownIcon from "@/svgs/Icons/DropdownIcon";
+import DropdownIcon from "@/svgs/icons/DropdownIcon";
 import Hero from "@/svgs/Images/Hero";
 interface HeroSectionProps {
   onLoginClick: () => void;

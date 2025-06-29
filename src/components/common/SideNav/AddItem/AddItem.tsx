@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./AddItem.module.scss";
-import AddIcon from "@/svgs/Icons/AddIcon";
+import AddIcon from "@/svgs/icons/AddIcon";
 
 interface AddItemProps {
   onClick?: () => void;

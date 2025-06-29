@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./WorkspaceBar.module.scss";
-import { UsersIcon, MessageIcon } from "@/svgs/Icons";
-import ChevronIcon from "@/svgs/Icons/ChevronIcon";
+import { UsersIcon, MessageIcon } from "@/svgs/icons";
+import ChevronIcon from "@/svgs/icons/ChevronIcon";
 import Section from "./Section";
 import GroupItem from "./GroupItem";
 import { useChatStore, useUIStore } from "@/store";
@@ -19,7 +19,7 @@ const WorkspaceBar: React.FC<WorkspaceBarProps> = ({ groupChats, dmChats }) => {
   const { chatTab, setChatTab } = useUIStore();
 
   const [groupsExpanded, setGroupsExpanded] = useState(true);
-  const [dmsExpanded, setDmsExpanded] = useState(false);
+  const [dmsExpanded, setDmsExpanded] = useState(true);
 
   const handleItemClick = (itemId: string | number, item: Chat) => {
     setActiveItem(String(itemId));

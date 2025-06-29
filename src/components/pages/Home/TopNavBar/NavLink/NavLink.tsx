@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import styles from "./NavLink.module.scss";
-import DropdownIcon from "@/svgs/Icons/DropdownIcon";
+import DropdownIcon from "@/svgs/icons/DropdownIcon";
 
 interface NavLinkProps {
   href: string;

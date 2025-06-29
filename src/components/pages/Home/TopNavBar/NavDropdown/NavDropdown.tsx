@@ -3,7 +3,7 @@ import React, { useState, useRef, } from "react";
 import Link from "next/link";
 import styles from "./NavDropdown.module.scss";
 
-import DropdownIcon from "@/svgs/Icons/DropdownIcon";
+import DropdownIcon from "@/svgs/icons/DropdownIcon";
 
 interface DropdownOption {
   href: string;

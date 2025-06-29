@@ -4,11 +4,6 @@
 // Section styles
 .section {
   padding: 0 8px;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid $blue-1;
-    padding-bottom: 24px;
-  }
 }
 
 .contactItemHeader {

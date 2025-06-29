@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import styles from "./CreateChatModal.module.scss";
-import { XIcon } from "@/svgs/Icons";
+import { XIcon } from "@/svgs/icons";
 import useCreateChat from "@/hooks/mutation/useCreateChat";
 import useGetUsers from "@/hooks/query/userGetusers";
 import useCurrentUser from "@/hooks/query/useCurrentUser";
@@ -20,10 +20,12 @@ const CreateChatModal: React.FC<CreateChatModalProps> = ({
     name: "",
     userIds: [] as string[],
   });
-  
+  const [showNameError, setShowNameError] = useState(false);
+  const [showUserError, setShowUserError] = useState(false);
   const mutationCreateChat = useCreateChat();
   const { data: users } = useGetUsers();
   const { data: currentUser } = useCurrentUser();
+
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent) => {
       if (e.target === e.currentTarget) {
@@ -38,6 +40,10 @@ const CreateChatModal: React.FC<CreateChatModalProps> = ({
       ...prev,
       [field]: value,
     }));
+    
+    if (field === "name" && showNameError) {
+      setShowNameError(false);
+    }
   };
 
   const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -56,6 +62,17 @@ const CreateChatModal: React.FC<CreateChatModalProps> = ({
   };
 
   const handleCreate = () => {
+    // Check for group name validation
+    if (type === "group" && !formData.name.trim()) {
+      setShowNameError(true);
+      return;
+    }
+    // Check for user selection validation
+    if (formData.userIds.length === 0) {
+      setShowUserError(true);
+      return;
+    }
+
     if (
       (type === "group" &&
         formData.name.trim() &&
@@ -67,15 +84,16 @@ const CreateChatModal: React.FC<CreateChatModalProps> = ({
         member_ids: formData.userIds.map((id) => Number(id)),
         is_group: type === "group",
       });
-      
       // Reset form data after creation
       setFormData({ name: "", userIds: [] });
+      setShowNameError(false);
       onClose();
     }
   };
 
   const handleCancel = () => {
     setFormData({ name: "", userIds: [] });
+    setShowNameError(false);
     onClose();
   };
 
@@ -125,10 +143,15 @@ const CreateChatModal: React.FC<CreateChatModalProps> = ({
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  className={styles.input}
+                  className={`${styles.input} ${showNameError ? styles.inputError : ""}`}
                   placeholder="Enter group name"
                   autoFocus
                 />
+                {showNameError && (
+                  <span className={styles.errorText}>
+                    Group name is required
+                  </span>
+                )}
               </div>
             )}
             {/* Users Dropdown */}
@@ -137,7 +160,7 @@ const CreateChatModal: React.FC<CreateChatModalProps> = ({
                 {type === "group" ? "Add Users" : "Select User"}
               </label>
               <select
-                className={styles.input}
+                className={`${styles.input} ${showUserError ? styles.inputError : ""}`}
                 value={
                   type === "group"
                     ? formData.userIds
@@ -162,6 +185,13 @@ const CreateChatModal: React.FC<CreateChatModalProps> = ({
                     </option>
                   ))}
               </select>
+              {showUserError && (
+                <span className={styles.errorText}>
+                  {type === "group"
+                    ? "At least one user is required"
+                    : "Please select a user"}
+                </span>
+              )}
             </div>
           </form>
         </main>
@@ -179,11 +209,6 @@ const CreateChatModal: React.FC<CreateChatModalProps> = ({
             onClick={handleCreate}
             className={styles.saveButton}
             type="button"
-            disabled={
-              (type === "group" &&
-                (!formData.name.trim() || formData.userIds.length === 0)) ||
-              (type === "dm" && formData.userIds.length !== 1)
-            }
           >
             {type === "group" ? "Create Group" : "Start DM"}
           </button>

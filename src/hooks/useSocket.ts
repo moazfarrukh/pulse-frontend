@@ -4,6 +4,7 @@ import { createSocketClient } from "@/clients/socket";
 import SocketEvents from "@/constants/socketEvents";
 import { usePresenceStore, useUserStore } from "@/store";
 import { PresenceUpdatePayload } from "@/types/Socket";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Global socket cache to ensure only one socket per user
 let globalSocket: ReturnType<typeof createSocketClient> | null = null;
@@ -13,7 +14,7 @@ export default function useSocket() {
   const { currentUser: user } = useUserStore();
   const { addActiveUser ,removeActiveUser} = usePresenceStore();
 
-
+  const queryClient = useQueryClient();
   useEffect(() => {
     // Disconnect previous socket if user changes
     if (globalSocket && globalUserId !== user?.id) {
@@ -36,10 +37,11 @@ export default function useSocket() {
         } else {  
            removeActiveUser(String(data.user_id));
         }
-        console.log("Presence update received:", data);
       };
       globalSocket.on(SocketEvents.ON_PRESENCE_UPDATE, handlePresenceUpdate);
-
+      globalSocket.on(SocketEvents.ON_CREATE_CHAT, () => {
+        queryClient.invalidateQueries({ queryKey: ["chats"] });
+      });
       globalSocket.on(SocketEvents.ON_CONNECT, handleConnect);
       globalSocket.on(SocketEvents.ON_DISCONNECT, handleDisconnect);
       return () => {

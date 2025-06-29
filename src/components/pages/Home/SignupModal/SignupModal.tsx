@@ -4,7 +4,7 @@ import TextField from "@/components/common/TextField";
 import styles from "./SignupModal.module.scss";
 import Button from "@/components/common/Button";
 import { useSignup } from "@/hooks/mutation";
-import { XIcon } from "@/svgs/Icons";
+import { XIcon } from "@/svgs/icons";
 
 export interface SignupModalProps {
   isOpen: boolean;

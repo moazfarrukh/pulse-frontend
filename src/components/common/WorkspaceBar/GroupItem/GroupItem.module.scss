@@ -9,9 +9,15 @@
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    position: relative;
 
     &:hover {
         background-color: #e3f2fd;
+        
+        .moreButton,
+        .quickLeave {
+            opacity: 1;
+        }
     }
 
     &.active {
@@ -59,8 +65,9 @@
     color: white;
     font-size: 12px;
     font-weight: 500;
+    overflow: hidden;
 
-    img {
+    .avatarImage {
         width: 100%;
         height: 100%;
         border-radius: 50%;
@@ -78,6 +85,89 @@
     white-space: nowrap;
 }
 
+// Action buttons that appear on hover
+.moreButton,
+.quickLeave {
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+    padding: 4px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    font-size: 16px;
+    color: $blue-6;
+    font-weight: bold;
+    width: 24px;
+    height: 24px;
+
+    &:hover {
+        background-color: rgba(33, 150, 243, 0.1);
+    }
+}
+
+.quickLeave {
+    font-size: 18px;
+    
+    &:hover {
+        background-color: rgba(244, 67, 54, 0.1);
+        color: #f44336;
+    }
+}
+
+// Dropdown menu
+.dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 4px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e0e0e0;
+    padding: 4px 0;
+    z-index: 1000;
+    min-width: 200px;
+}
+
+.dropdownItem,
+.dropdownItemDanger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    .icon {
+        font-size: 16px;
+        width: 16px;
+        text-align: center;
+        display: inline-block;
+    }
+}
+
+.dropdownItem {
+    color: #333;
+
+    &:hover {
+        background-color: #f5f5f5;
+    }
+}
+
+.dropdownItemDanger {
+    color: #f44336;
+
+    &:hover {
+        background-color: #ffebee;
+    }
+}
+
 // Optional: badge for notifications
 .groupBadge {
     background: #f44336;
@@ -92,72 +182,97 @@
     display: inline-block;
 }
 
+// Improved dialog styles
 .dialogOverlay {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.18);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    backdrop-filter: blur(2px);
 }
 
 .dialogBox {
     background: #fff;
-    border-radius: 14px;
-    padding: 28px 36px 22px 36px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    min-width: 280px;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    min-width: 320px;
+    max-width: 400px;
+    margin: 0 16px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.dialogBox p {
-    margin-bottom: 22px;
-    font-size: 1.08rem;
+.dialogIcon {
+    width: 48px;
+    height: 48px;
+    background: #ffebee;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    font-size: 24px;
 }
 
-.dialogBox b {
-    font-weight: 700;
-    color: #1976d2;
+.dialogTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.dialogText {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 24px;
 }
 
 .dialogActions {
     display: flex;
-    gap: 14px;
-    margin-top: 8px;
+    gap: 12px;
+    width: 100%;
 }
 
 .leaveBtn {
+    flex: 1;
     background: #f44336;
     color: #fff;
     border: none;
-    border-radius: 6px;
-    padding: 8px 22px;
+    border-radius: 8px;
+    padding: 12px 24px;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
-    transition: background 0.18s;
-    box-shadow: 0 2px 8px rgba(244,67,54,0.08);
+    transition: background 0.2s ease;
+    
     &:hover {
         background: #d32f2f;
     }
 }
 
 .cancelBtn {
-    background: #e0e0e0;
+    flex: 1;
+    background: #f5f5f5;
     color: #333;
     border: none;
-    border-radius: 6px;
-    padding: 8px 22px;
+    border-radius: 8px;
+    padding: 12px 24px;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
-    transition: background 0.18s;
+    transition: background 0.2s ease;
+    
     &:hover {
-        background: #bdbdbd;
+        background: #e0e0e0;
     }
 }
-

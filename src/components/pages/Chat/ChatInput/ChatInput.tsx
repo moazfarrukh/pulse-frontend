@@ -6,9 +6,14 @@ import { useChatStore, useUserStore } from "@/store";
 import SocketEvents from "@/constants/socketEvents";
 import useSocket from "@/hooks/useSocket";
 import IconButton from "@/components/common/IconButton";
-import { AddButtonIcon, AlignLeftIcon, BIcon, CodeIcon, ConsoleIcon, FontIcon, ItalicIcon, LinkIcon, ListIcon, MicIcon, SendIcon, SmileIcon, VideoIcon } from "@/svgs/Icons";
+import { AddButtonIcon,  BIcon, CodeIcon, ItalicIcon, LinkIcon, ListIcon, MicIcon, SendIcon, VideoIcon } from "@/svgs/icons";
 import VerticalSeperator from "@/components/common/VerticalSeperator";
 import { MessagePayload } from "@/types/Message";
+import Image from "next/image";
+import PdfFileIcon from "@/svgs/icons/PdfFileIcon";
+import VideoFileIcon from "@/svgs/icons/VideoFileIcon";
+import DocFileIcon from "@/svgs/icons/DocFileIcon";
+import GenericFileIcon from "@/svgs/icons/GenericFileIcon";
 
 interface ChatInputProps {
   socket: ReturnType<typeof useSocket>;
@@ -22,13 +27,16 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
   const [attachments, setAttachments] = useState<File[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [isVideoRecording, setIsVideoRecording] = useState(false);
+  const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const textAreaRef = useRef<HTMLInputElement | null>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const videoRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const videoChunksRef = useRef<Blob[]>([]);
+  const videoPreviewRef = useRef<HTMLVideoElement | null>(null);
+  
   // Function to handle attachment removal
   const handleRemoveAttachment = (index: number) => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
@@ -39,20 +47,20 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
     if (file.type.startsWith('image/')) {
       return URL.createObjectURL(file);
     }
-    
-    // Return appropriate icon based on file type
-    if (file.type.startsWith('audio/')) {
-      return '/icons/audio-file.svg';
-    } else if (file.type.startsWith('video/')) {
-      return '/icons/video-file.svg';
-    } else if (file.type.includes('pdf')) {
-      return '/icons/pdf-file.svg';
-    } else if (file.type.includes('document') || file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
-      return '/icons/doc-file.svg';
+    if (file.type.startsWith('video/')) {
+      return <VideoFileIcon />;
     }
+    if (file.type.includes('pdf')) {
+      return <PdfFileIcon />;
+    }
+    if (file.type.includes('document') || file.name.endsWith('.doc') || file.name.endsWith('.docx')) {
+      return <DocFileIcon />;
+    }
+      
     
-    return '/icons/generic-file.svg';
+    return <GenericFileIcon />;
   };
+
   // Text formatting handlers
   const getSelectedText = () => {
     if (!textAreaRef.current) return "";
@@ -71,7 +79,22 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
     return selectedText.startsWith('*') && selectedText.endsWith('*') && !selectedText.startsWith('**');
   };
 
-  const applyFormatting = (format: 'bold' | 'italic') => {
+  const isTextCode = () => {
+    const selectedText = getSelectedText();
+    return selectedText.startsWith('`') && selectedText.endsWith('`');
+  };
+
+  const isTextLink = () => {
+    const selectedText = getSelectedText();
+    return selectedText.startsWith('[') && selectedText.includes('](') && selectedText.endsWith(')');
+  };
+
+  const isTextList = () => {
+    const selectedText = getSelectedText();
+    return /^(\s*)([-*]\s+)(.+)$/gm.test(selectedText);
+  };
+
+  const applyFormatting = (format: 'bold' | 'italic' | 'code' | 'link' | 'list') => {
     if (!textAreaRef.current) return;
     
     const { selectionStart, selectionEnd } = textAreaRef.current;
@@ -107,6 +130,61 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
           newCursorPos = selectionStart + 1;
         }
         break;
+      case 'code':
+        if (isTextCode()) {
+          // Remove code formatting
+          formattedText = selectedText.slice(1, -1);
+          newCursorPos = selectionStart;
+        } else {
+          // Add code formatting
+          formattedText = `\`${selectedText}\``;
+          newCursorPos = selectionStart + 1;
+        }
+        break;
+      case 'link':
+        if (isTextLink()) {
+          // Remove link formatting - extract just the text
+          const linkMatch = selectedText.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+          if (linkMatch) {
+            formattedText = linkMatch[1];
+            newCursorPos = selectionStart;
+          } else {
+            formattedText = selectedText;
+          }
+        } else {
+          // Add link formatting - prompt for URL
+          const url = prompt('Enter URL:');
+          if (url) {
+            formattedText = `[${selectedText}](${url})`;
+            newCursorPos = selectionStart + selectedText.length + 3; // Position after the text
+          } else {
+            return; // User cancelled
+          }
+        }
+        break;
+      case 'list':
+        if (isTextList()) {
+          // Remove list formatting
+          const lines = selectedText.split('\n');
+          const unformattedLines = lines.map(line => {
+            const match = line.match(/^(\s*)([-*]\s+)(.+)$/);
+            return match ? match[3] : line;
+          });
+          formattedText = unformattedLines.join('\n');
+          newCursorPos = selectionStart;
+        } else {
+          // Add list formatting
+          const lines = selectedText.split('\n');
+          const formattedLines = lines.map(line => {
+            if (line.trim()) {
+              return `- ${line.trim()}`;
+            }
+            return line;
+          });
+          formattedText = formattedLines.join('\n');
+          newCursorPos = selectionStart + 2; // Position after the dash
+        }
+        break;
     }
     
     const newMessage = 
@@ -136,17 +214,30 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
     applyFormatting('italic');
   };
 
-  // Handle typing indicators
-  const handleTypingStart = () => {
-    if (!socket || !currentChat?.id || !user?.id || isTyping) return;
-      setIsTyping(true);
-      socket.emit(SocketEvents.ON_TYPING_START, {
-        chat_id: currentChat.id,
-        user_id: user.id
-      });
+  const handleConsoleClick = () => {
+    applyFormatting('code');
   };
 
-  const handleTypingStop = () => {
+  const handleLinkClick = () => {
+    applyFormatting('link');
+  };
+
+  const handleListClick = () => {
+    applyFormatting('list');
+  };
+
+  // Improved typing handlers
+  const startTyping = () => {
+    if (!socket || !currentChat?.id || !user?.id || isTyping) return;
+    
+    setIsTyping(true);
+    socket.emit(SocketEvents.ON_TYPING_START, {
+      chat_id: currentChat.id,
+      user_id: user.id
+    });
+  };
+
+  const stopTyping = () => {
     if (!socket || !currentChat?.id || !user?.id || !isTyping) return;
     
     setIsTyping(false);
@@ -156,27 +247,30 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
     });
   };
 
-  // Handle message input changes
+  // Improved message input handler with debounced typing
   const handleMessageChange = (value: string) => {
     setMessage(value);
-
-    // Handle typing indicators
-    if (value.trim() && !isTyping) {
-      handleTypingStart();
-    }
 
     // Clear existing timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
 
-    // Set new timeout to stop typing indicator
-    if (value.trim()) {
+    if (value.trim().length > 0) {
+      // Start typing if not already typing
+      if (!isTyping) {
+        startTyping();
+      }
+      
+      // Set timeout to stop typing after 2 seconds of inactivity
       typingTimeoutRef.current = setTimeout(() => {
-        handleTypingStop();
-      }, 2000); // Stop typing indicator after 2 seconds of inactivity
-    } else if (isTyping) {
-      handleTypingStop();
+        stopTyping();
+      }, 2000);
+    } else {
+      // Stop typing immediately if input is empty
+      if (isTyping) {
+        stopTyping();
+      }
     }
   };
 
@@ -244,6 +338,19 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
         audio: true 
       });
       
+      // Store the stream for preview
+      setVideoStream(stream);
+      
+      // Set up video preview after a short delay to ensure DOM is ready
+      setTimeout(() => {
+        if (videoPreviewRef.current && stream) {
+          videoPreviewRef.current.srcObject = stream;
+          videoPreviewRef.current.play().catch(error => {
+            console.log('Video preview play error (expected):', error);
+          });
+        }
+      }, 100);
+      
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType: 'video/webm;codecs=vp9,opus'
       });
@@ -265,6 +372,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
         
         setAttachments(prev => [...prev, videoFile]);
         setIsVideoRecording(false);
+        setVideoStream(null);
         
         // Stop all tracks
         stream.getTracks().forEach(track => track.stop());
@@ -293,39 +401,32 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
     }
   };
 
-  // Clean up recording on unmount
-  useEffect(() => {
-    return () => {
-      if (mediaRecorderRef.current && isRecording) {
-        mediaRecorderRef.current.stop();
-      }
-      if (videoRecorderRef.current && isVideoRecording) {
-        videoRecorderRef.current.stop();
-      }
-    };
-  }, [isRecording, isVideoRecording]);
-
-  // Clean up typing timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-      if (isTyping) {
-        handleTypingStop();
-      }
-    };
-  }, [isTyping]);
-
-  // Stop typing when chat changes
-  useEffect(() => {
-    if (isTyping) {
-      handleTypingStop();
-    }
+  // Cleanup function for typing and recording
+  const cleanup = () => {
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
     }
-  }, [currentChat?.id, isTyping]);
+    if (isTyping) {
+      stopTyping();
+    }
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+    }
+    if (videoRecorderRef.current && isVideoRecording) {
+      videoRecorderRef.current.stop();
+    }
+  };
+
+  // Clean up on unmount
+  useEffect(() => {
+    return cleanup;
+  }, []);
+
+  // Clean up when chat changes
+  useEffect(() => {
+    cleanup();
+  }, [currentChat?.id]);
 
   const handleAttachmentButtonClick = () => {
     fileInputRef.current?.click();
@@ -352,14 +453,15 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
   const handleSendMessage = async () => {
     if ((!message.trim() && attachments.length === 0) || !socket || !currentChat?.id || !user?.id) return;
 
-    // Stop typing indicator
+    // Stop typing indicator immediately when sending
     if (isTyping) {
-      handleTypingStop();
+      stopTyping();
     }
 
     // Clear typing timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
     }
 
     // Prepare attachments as buffers
@@ -389,11 +491,12 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       await handleSendMessage();
     }
+    // Shift+Enter will insert a new line by default in textarea
   };
 
   const isSendDisabled = (!message.trim() && attachments.length === 0) || !socket || !currentChat?.id || !user?.id;
@@ -415,30 +518,35 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
         >
           <ItalicIcon />
         </IconButton>
-        <IconButton title="Link">
+        <IconButton 
+          title="Link" 
+          onClick={handleLinkClick}
+          className={isTextLink() ? styles.linkActive : ''}
+        >
           <LinkIcon />
         </IconButton>
-        <VerticalSeperator />
-        <IconButton title="List">
+        <IconButton 
+          title="List" 
+          onClick={handleListClick}
+          className={isTextList() ? styles.listActive : ''}
+        >
           <ListIcon />
         </IconButton>
-        <IconButton title="Align Left">
-          <AlignLeftIcon />
-        </IconButton>
+
         <VerticalSeperator />
-        <IconButton title="Code">
+        <IconButton title="Code" onClick={handleConsoleClick} className={isTextCode() ? styles.consoleActive : ''}>
           <CodeIcon />
         </IconButton>
       </div>
       <div className={styles.textAreaWrapper}>
-        <input
+        <textarea
           className={styles.textArea}
-          type="text"
           placeholder={currentChat ? `Message ${currentChat.name}` : "Select a chat to start messaging"}
           value={message}
           onChange={(e) => handleMessageChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          ref={textAreaRef}
+          ref={textAreaRef as React.RefObject<HTMLTextAreaElement>}
+          rows={1}
         />
       </div>
       {/* Show selected attachments */}
@@ -448,17 +556,17 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
             <span key={idx} className={styles.selectedAttachment}>
               <span className={styles.filePreviewContainer}>
                 {file.type.startsWith('image/') ? (
-                  <img
-                    src={getFilePreview(file)}
+                  <Image
+                    src={getFilePreview(file) as string}
                     alt={file.name}
                     className={styles.filePreview}
+                    width={32}
+                    height={32}
                   />
                 ) : (
-                  <img
-                    src={getFilePreview(file)}
-                    alt={file.name}
-                    className={styles.fileIcon}
-                  />
+                  <div className={styles.fileIconContainer}>
+                    {getFilePreview(file) as React.ReactElement}
+                  </div>
                 )}
               </span>
               <span className={styles.fileName}>{file.name}</span>
@@ -491,6 +599,18 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
           </span>
         </div>
       )}
+      {/* Video preview */}
+      {videoStream && (
+        <div className={styles.videoPreviewContainer}>
+          <video
+            ref={videoPreviewRef}
+            className={styles.videoPreview}
+            autoPlay
+            muted
+            playsInline
+          />
+        </div>
+      )}
       <div className={styles.bottomBar}>
         <div className={styles.attachmentBar}>
           <IconButton title="Add Attachment" onClick={handleAttachmentButtonClick}>
@@ -503,17 +623,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
             ref={fileInputRef}
             onChange={handleFileChange}
           />
-          <IconButton title="Italic">
-            <ItalicIcon />
-          </IconButton>
-          <IconButton title="Font">
-            <FontIcon />
-          </IconButton>
-          <IconButton title="Emoji">
-            <SmileIcon />
-          </IconButton>
           <VerticalSeperator />
-          <IconButton 
+
+        <IconButton 
             title={isVideoRecording ? "Stop Video Recording" : "Video Message"} 
             onClick={handleVideoButtonClick}
             className={isVideoRecording ? styles.videoRecording : ''}
@@ -526,10 +638,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ socket }) => {
             className={isRecording ? styles.recording : ''}
           >
             <MicIcon />
-          </IconButton>
-          <VerticalSeperator />
-          <IconButton title="Console">
-            <ConsoleIcon />
           </IconButton>
         </div>
         <button 

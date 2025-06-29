@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import NavigationItem from "./NavigationItem";
-import {HomeIcon} from "@/svgs/Icons";
-import {NotificationIcon} from "@/svgs/Icons";
-import MessageIcon from "@/svgs/Icons/MessageIcon";
-import MoreIcon from "@/svgs/Icons/MoreIcon";   
+import {HomeIcon} from "@/svgs/icons";
+import {NotificationIcon} from "@/svgs/icons";
+import MessageIcon from "@/svgs/icons/MessageIcon";
+import MoreIcon from "@/svgs/icons/MoreIcon";   
 import styles from "./MainNavigation.module.scss";
 import { useUIStore } from "@/store";
 const MainNavigation: React.FC = () => {
