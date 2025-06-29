@@ -6,11 +6,11 @@ import ChevronIcon from "@/svgs/icons/ChevronIcon";
 import Section from "./Section";
 import GroupItem from "./GroupItem";
 import { useChatStore, useUIStore } from "@/store";
-import { Chat, ChatTab } from "@/types";
+import { Chat, ChatTab, ChatWithUser } from "@/types";
 
 interface WorkspaceBarProps {
   groupChats: Chat[];
-  dmChats: Chat[];
+  dmChats: ChatWithUser[];
 }
 
 const WorkspaceBar: React.FC<WorkspaceBarProps> = ({ groupChats, dmChats }) => {

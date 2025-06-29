@@ -23,6 +23,12 @@ import { User } from "./User";
         members?: User[];
     }
 
+    export interface ChatWithUser extends Chat {
+        other_user_id?: number;
+        other_user_name?: string;
+        other_user_avatar?: string;
+    }
+
     export interface CreateChatRequest {
         is_group: boolean;
         name?: string;

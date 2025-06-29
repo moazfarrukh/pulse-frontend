@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import styles from "./GroupItem.module.scss";
-import { ChatWithMembers } from "@/types";
+import { ChatWithUser } from "@/types";
 import useSocket from "@/hooks/useSocket";
 import SocketEvents from "@/constants/socketEvents";
 import { useQueryClient } from "@tanstack/react-query";
-import { useChatStore, useUIStore } from "@/store";
+import { useChatStore, useUIStore, usePresenceStore } from "@/store";
 import { XIcon } from "@/svgs/icons";
 
 interface GroupItemProps {
-  group: ChatWithMembers;
+  group: ChatWithUser;
   active?: boolean;
   onClick?: () => void;
   className?: string;
@@ -36,8 +36,13 @@ const GroupItem: React.FC<GroupItemProps> = ({
 
   const { setChatTab, chatTab } = useUIStore();
   const { currentChannel, setCurrentChannel } = useChatStore();
+  const { activeUsers } = usePresenceStore();
   const socket = useSocket();
   const queryClient = useQueryClient();
+
+  // Check if the user is online (for non-group chats)
+  const isUserOnline = !group.is_group && group.other_user_id && 
+    activeUsers.includes(String(group.other_user_id));
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -118,6 +123,8 @@ const GroupItem: React.FC<GroupItemProps> = ({
               height={32}
               unoptimized
             />
+            {isUserOnline && <div className={styles.activeDot} />}
+            {!isUserOnline && <div className={styles.inactiveDot} />}
           </div>
         )}
         
